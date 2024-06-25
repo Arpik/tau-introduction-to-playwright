@@ -15,3 +15,11 @@ test('Check API page', async ({ page }) => {
     await expect(page).toHaveURL(/.*welcome/)
     await expect(page).toHaveTitle(/Welcome/)
   })
+
+  test('Ambassadors', async ({ page }) => {
+    await page.goto('https://playwright.dev/');
+    await expect(page).toHaveTitle(/Playwright/);
+    await page.getByRole('link', { name: 'Community' }).click();
+    await page.locator('.pagination-nav__sublabel').click();
+    await expect(page).toHaveTitle(/Ambassadors/);
+  })
