@@ -23,3 +23,11 @@ test('Check API page', async ({ page }) => {
     await page.locator('.pagination-nav__sublabel').click();
     await expect(page).toHaveTitle(/Ambassadors/);
   })
+
+  test('Check Playwright Test Link under API page', async ({ page }) => {
+    await page.goto('https://playwright.dev/');
+    await expect(page).toHaveTitle(/Playwright/);
+    await page.getByRole('link', { name: 'API' }).click();
+    await page.locator('.menu__link menu__link--active').click();
+    await expect(page).toHaveTitle(/ Playwright Test/);
+  })
