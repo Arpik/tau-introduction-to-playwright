@@ -13,6 +13,7 @@ export class TopMenuPage {
     readonly javaLink: Locator;
     readonly dotnetLink: Locator;
     readonly nodejsLink: Locator;
+    readonly npmLink: Locator;
     
     readonly docsLabel: Locator;
     readonly apiLabel: Locator;
@@ -30,6 +31,9 @@ export class TopMenuPage {
     readonly apiDescription: string = 'Playwright Library';
     readonly communityDescription: string = 'Wellcome'
 
+    // Distinct variables for each page
+
+
     constructor(page: Page) {
         this.page = page;
         this.getStartedLink = page.getByRole('link', { name: 'Get started' });
@@ -42,7 +46,8 @@ export class TopMenuPage {
         this.pythonLink = page.getByRole('navigation', {name: 'Main'}).getByText('Python');
         this.javaLink = page.getByRole('navigation', { name: 'Main' }).getByText('Java');
         this.dotnetLink = page.getByRole('navigation', { name: 'Main' }).getByText('.NET');
-        
+        this.npmLink = page.getByRole('tab', { name: 'npm'});
+
         // Don't understand this part..
         this.nodeLabel = page.getByText(this.nodeDescription, {exact:true});
         this.javaLabel = page.getByText(this.javaDescription);
@@ -67,8 +72,14 @@ export class TopMenuPage {
         await expect(this.nodeLabel).not.toBeVisible();
     }
 
-    async assertJavaDescriptionVisible() {
-        await expect(this.javaLabel).toBeVisible();
+    async assertPythonDescriptionVisible() {
+        await expect(this.pythonLabel).toBeVisible();
+    }
+
+    async selectDropdownElement(dropdownElement){
+        if(dropdownElement == this.pythonLink) {
+            await expect(this.npmLink).toBeVisible();
+        } 
     }
 
 }
