@@ -14,6 +14,10 @@ export class TopMenuPage {
     readonly dotnetLink: Locator;
     readonly nodejsLink: Locator;
     readonly npmLink: Locator;
+    readonly appJavaLink: Locator;
+    readonly msTestLink: Locator
+
+    readonly pyPILink: Locator;
     
     readonly docsLabel: Locator;
     readonly apiLabel: Locator;
@@ -41,15 +45,21 @@ export class TopMenuPage {
         this.apiLink = page.getByRole('button', {name: 'API'})
         this.communityLink = page.getByRole('button', {name: 'Community'})
         this.nodeLink = page.getByRole('button', {name: 'Node.js'});
-        
+
         this.nodejsLink = page.getByRole('navigation', {name: 'Main'}).getByText('Node.js');
         this.pythonLink = page.getByRole('navigation', {name: 'Main'}).getByText('Python');
         this.javaLink = page.getByRole('navigation', { name: 'Main' }).getByText('Java');
         this.dotnetLink = page.getByRole('navigation', { name: 'Main' }).getByText('.NET');
         this.npmLink = page.getByRole('tab', { name: 'npm'});
-
+        
+        // For Dropdown Element Pages
+        this.pyPILink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
+        this.npmLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
+        this.appJavaLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
+        this.msTestLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
+        
         // Don't understand this part..
-        this.nodeLabel = page.getByText(this.nodeDescription, {exact:true});
+        this.nodeLabel = page.getByText(this.nodeDescription);
         this.javaLabel = page.getByText(this.javaDescription);
         this.docsLabel = page.getByText(this.docsDescription);
         this.apiLabel = page.getByText(this.apiDescription);
@@ -76,10 +86,19 @@ export class TopMenuPage {
         await expect(this.pythonLabel).toBeVisible();
     }
 
-    async selectDropdownElement(dropdownElement){
-        if(dropdownElement == this.pythonLink) {
-            await expect(this.npmLink).toBeVisible();
-        } 
+    async selectDropdownElement(selectedElement){
+        if(selectedElement == this.javaLabel) {
+            await expect(this.javaLink).toBeVisible();
+            
+        } else if (selectedElement == this.pythonLabel) {
+            await expect (this.pyPILink).toBeVisible()
+
+        } else if (selectedElement == this.dotnetLabel) {
+            await expect(this.appJavaLink).toBeVisible()
+
+        } else if (selectedElement == this.msTestLink) {
+            await expect(this.msTestLink).toBeVisible()
+        }
     }
 
 }
