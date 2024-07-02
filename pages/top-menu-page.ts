@@ -47,13 +47,13 @@ export class TopMenuPage {
         this.nodeLink = page.getByRole('button', {name: 'Node.js'});
 
         this.nodejsLink = page.getByRole('navigation', {name: 'Main'}).getByText('Node.js');
-        this.pythonLink = page.getByRole('navigation', {name: 'Main'}).getByText('Python');
+        this.pythonLink = page.locator('a:has-text("Python")');
         this.javaLink = page.getByRole('navigation', { name: 'Main' }).getByText('Java');
         this.dotnetLink = page.getByRole('navigation', { name: 'Main' }).getByText('.NET');
         this.npmLink = page.getByRole('tab', { name: 'npm'});
         
         // For Dropdown Element Pages
-        this.pyPILink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
+        this.pyPILink = page.locator('li:has-text("PyPI")');
         this.npmLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
         this.appJavaLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
         this.msTestLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
@@ -82,15 +82,16 @@ export class TopMenuPage {
         await expect(this.nodeLabel).not.toBeVisible();
     }
 
-    async assertPythonDescriptionVisible() {
-        await expect(this.pythonLabel).toBeVisible();
+    async assertPyPIVisible() {
+        await expect(this.pyPILink).toBeVisible();
     }
 
     async selectDropdownElement(selectedElement){
         if(selectedElement == this.javaLabel) {
             await expect(this.javaLink).toBeVisible();
-            
-        } else if (selectedElement == this.pythonLabel) {
+
+        } else if (selectedElement == 'Python') {
+            await this.pythonLink.click()
             await expect (this.pyPILink).toBeVisible()
 
         } else if (selectedElement == this.dotnetLabel) {
