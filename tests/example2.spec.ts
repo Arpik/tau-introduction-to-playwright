@@ -19,28 +19,42 @@ async function clickGetStarted(page: Page) {
 
 test.describe('Playwright website', () => {
 
-    test('has title', async () => {
+    test.only('has title', async () => {
         await homePage.assertPageTitle();
     });
     
-    test('get started link', async ({ page }) => {
+    test.only('get started link', async ({ page }) => {
         // Act
         await clickGetStarted(page);
         // Assert
         await topMenuPage.assertPageUrl(pageUrl);
+        await topMenuPage.assertNpmVisible();
+        // Also add here the label is Node.js
     });
-    
-    test('check Java page', async ({ page }) => {
+
+    test.only('Check Python page', async ({ page }) => {
         await test.step('Act', async () => {
             await clickGetStarted(page);
             await topMenuPage.hoverNode();
-            await topMenuPage.clickJava();
+            await topMenuPage.selectDropdownElement("Python")
         });
       
         await test.step('Assert', async () => {
             await topMenuPage.assertPageUrl(pageUrl);
-            await topMenuPage.assertNodeDescriptionNotVisible();
-            await topMenuPage.assertJavaDescriptionVisible();
+            await topMenuPage.assertPyPIVisible();
+        });
+    });
+    
+    test.only('Check Java page', async ({ page }) => {
+        await test.step('Act', async () => {
+            await clickGetStarted(page);
+            await topMenuPage.hoverNode();
+            await topMenuPage.selectDropdownElement('Java');
+        });
+      
+        await test.step('Assert', async () => {
+            await topMenuPage.assertPageUrl(pageUrl);
+            await topMenuPage.assertAppJavaVisible()
         });
     });
 });
