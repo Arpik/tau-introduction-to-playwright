@@ -58,6 +58,7 @@ test.describe('Playwright website', () => {
         });
     });
 
+    // Add checks for .net
     test.only('Check .Net page', async ({ page }) => {
         await test.step('Act', async () => {
             await clickGetStarted(page);
