@@ -1,5 +1,6 @@
 import { StitchMode } from '@applitools/eyes-playwright';
 import { expect, Locator, Page } from '@playwright/test';
+import exp from 'constants';
 import { get } from 'http';
 
 export class TopMenuPage {
@@ -28,16 +29,8 @@ export class TopMenuPage {
     readonly pythonLabel: Locator;
     readonly javaLabel: Locator;
     readonly dotnetLabel: Locator;
-  
-    readonly nodeDescription: string = 'Installing Playwright';
-    readonly javaDescription: string = `Playwright is distributed as a set of Maven modules. The easiest way to use it is to add one dependency to your project's pom.xml as described below. If you're not familiar with Maven please refer to its documentation.`;
-    readonly docsDescription: string = 'Installation';
-    readonly apiDescription: string = 'Playwright Library';
-    readonly communityDescription: string = 'Wellcome'
 
     // Distinct variables for each page
-
-
     constructor(page: Page) {
         this.page = page;
         this.getStartedLink = page.getByRole('link', { name: 'Get started' });
@@ -46,61 +39,42 @@ export class TopMenuPage {
         this.communityLink = page.getByRole('button', {name: 'Community'})
         this.nodeLink = page.getByRole('button', {name: 'Node.js'});
 
-        this.nodejsLink = page.getByRole('navigation', {name: 'Main'}).getByText('Node.js');
-        this.pythonLink = page.locator('a:has-text("Python")');
-        this.javaLink = page.getByRole('navigation', { name: 'Main' }).getByText('Java');
-        this.dotnetLink = page.getByRole('navigation', { name: 'Main' }).getByText('.NET');
-        this.npmLink = page.getByRole('tab', { name: 'npm'});
-        
+        this.pythonLink = page.locator('a.dropdown__link[href="/python/docs/intro"]');
+        this.javaLink = page.locator('a.dropdown__link[href="/java/docs/intro"]');  
+
         // For Dropdown Element Pages
         this.pyPILink = page.locator('li:has-text("PyPI")');
-        this.npmLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
-        this.appJavaLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
-        this.msTestLink = page.locator(".tabs__item tabItem_LNqP tabs__item--active");
-        
-        // Don't understand this part..
-        this.nodeLabel = page.getByText(this.nodeDescription);
-        this.javaLabel = page.getByText(this.javaDescription);
-        this.docsLabel = page.getByText(this.docsDescription);
-        this.apiLabel = page.getByText(this.apiDescription);
-        this.communityLabel = page.getByText(this.communityDescription)
+        this.npmLink = page.locator('li[role="tab"][aria-selected="true"].tabs__item.tabItem_LNqP.tabs__item--active:has-text("npm")').nth(0);
+        this.appJavaLink = page.locator('li[role="tab"][aria-selected="true"].tabs__item.tabItem_LNqP.tabs__item--active:has-text("App.java")').nth(0);        
     }
 
     async hoverNode() {
         await this.nodeLink.hover();
-    }
-    
-    async clickJava() {
-        await this.javaLink.click();
     }
 
     async assertPageUrl(pageUrl: RegExp) {
         await expect(this.page).toHaveURL(pageUrl);
     }
 
-    async assertNodeDescriptionNotVisible() {
-        await expect(this.nodeLabel).not.toBeVisible();
-    }
-
     async assertPyPIVisible() {
         await expect(this.pyPILink).toBeVisible();
     }
 
-    async selectDropdownElement(selectedElement){
-        if(selectedElement == this.javaLabel) {
-            await expect(this.javaLink).toBeVisible();
-
-        } else if (selectedElement == 'Python') {
-            await this.pythonLink.click()
-            await expect (this.pyPILink).toBeVisible()
-
-        } else if (selectedElement == this.dotnetLabel) {
-            await expect(this.appJavaLink).toBeVisible()
-
-        } else if (selectedElement == this.msTestLink) {
-            await expect(this.msTestLink).toBeVisible()
-        }
+    async assertNpmVisible() {
+        await expect(this.npmLink).toBeVisible()
     }
 
+    async assertAppJavaVisible() {
+        await expect(this.appJavaLink).toBeVisible()
+    }
+
+    async selectDropdownElement(selectedElement){
+        if (selectedElement == 'Python') {
+            await this.pythonLink.click()
+        } 
+        else if (selectedElement == 'Java') {
+            await this.javaLink.click()
+        }
+    }
 }
 export default TopMenuPage;
