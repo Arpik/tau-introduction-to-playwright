@@ -23,7 +23,7 @@ test.describe('Playwright website', () => {
         await homePage.assertPageTitle();
     });
     
-    test.only('get started link', async ({ page }) => {
+    test.only('Get Started link', async ({ page }) => {
         // Act
         await clickGetStarted(page);
         // Assert
@@ -55,6 +55,19 @@ test.describe('Playwright website', () => {
         await test.step('Assert', async () => {
             await topMenuPage.assertPageUrl(pageUrl);
             await topMenuPage.assertAppJavaVisible()
+        });
+    });
+
+    test.only('Check .Net page', async ({ page }) => {
+        await test.step('Act', async () => {
+            await clickGetStarted(page);
+            await topMenuPage.hoverNode();
+            await topMenuPage.selectDropdownElement('.NET');
+        });
+      
+        await test.step('Assert', async () => {
+            await topMenuPage.assertPageUrl(pageUrl);
+            await topMenuPage.assertMSTestVisible()
         });
     });
 });

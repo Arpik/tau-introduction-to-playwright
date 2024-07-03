@@ -41,11 +41,13 @@ export class TopMenuPage {
 
         this.pythonLink = page.locator('a.dropdown__link[href="/python/docs/intro"]');
         this.javaLink = page.locator('a.dropdown__link[href="/java/docs/intro"]');  
-
+        this.dotnetLink = page.locator('a.dropdown__link[href="/dotnet/docs/intro"]');
+        
         // For Dropdown Element Pages
         this.pyPILink = page.locator('li:has-text("PyPI")');
         this.npmLink = page.locator('li[role="tab"][aria-selected="true"].tabs__item.tabItem_LNqP.tabs__item--active:has-text("npm")').nth(0);
         this.appJavaLink = page.locator('li[role="tab"][aria-selected="true"].tabs__item.tabItem_LNqP.tabs__item--active:has-text("App.java")').nth(0);        
+        this.msTestLink = page.locator('li[role="tab"][aria-selected="true"].tabs__item.tabItem_LNqP.tabs__item--active:has-text("MSTest")').nth(0)
     }
 
     async hoverNode() {
@@ -68,12 +70,19 @@ export class TopMenuPage {
         await expect(this.appJavaLink).toBeVisible()
     }
 
+    async assertMSTestVisible() {
+        await expect(this.msTestLink).toBeVisible()
+    }
+
     async selectDropdownElement(selectedElement){
         if (selectedElement == 'Python') {
             await this.pythonLink.click()
         } 
         else if (selectedElement == 'Java') {
             await this.javaLink.click()
+        }
+        else if (selectedElement == '.NET') {
+            await this.dotnetLink.click()
         }
     }
 }
