@@ -105,7 +105,7 @@ test.describe('Playwright website', () => {
         // Also add here the label is Node.js
     });
 
-    test.only('Check Python page', async ({ page }) => {
+    test.only('the page should update properly when "Python" is selected from the dropdown.', async ({ page }) => {
         await test.step('Act', async () => {
             await clickGetStarted(page);
             await topMenuPage.hoverNode();
@@ -119,7 +119,7 @@ test.describe('Playwright website', () => {
         });
     });
     
-    test.only('Check Java page', async ({ page }) => {
+    test.only('the page should update properly when "Java" is selected from the dropdown.', async ({ page }) => {
         await test.step('Act', async () => {
             await clickGetStarted(page);
             await topMenuPage.hoverNode();
@@ -133,8 +133,7 @@ test.describe('Playwright website', () => {
         });
     });
 
-    // Add checks for .net
-    test.only('Check .Net page', async ({ page }) => {
+    test.only('the page should update properly when ".NET" is selected from the dropdown.', async ({ page }) => {
         await test.step('Act', async () => {
             await clickGetStarted(page);
             await topMenuPage.hoverNode();
