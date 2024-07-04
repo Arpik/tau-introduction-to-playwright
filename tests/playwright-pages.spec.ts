@@ -1,7 +1,7 @@
 import { test, type Page } from '@playwright/test';
 import { HomePage } from '../pages/home-page';
 import { TopMenuPage } from '../pages/top-menu-page';
-import {
+import{
     BatchInfo,
     Configuration,
     EyesRunner,
@@ -12,23 +12,24 @@ import {
     ScreenOrientation,
     Eyes,
     Target
-  } from '@applitools/eyes-playwright';
+} from '@applitools/eyes-playwright';
 
 const URL = 'https://playwright.dev/';
 let homePage: HomePage;
 let topMenuPage: TopMenuPage;
 const pageUrl = /.*intro/;
 
-// Applitools
+// Integrating Applitools
+
 // export const USE_ULTRAFAST_GRID: boolean = true;
 export const USE_ULTRAFAST_GRID: boolean = false;
 export let Batch: BatchInfo;
 export let Config: Configuration;
 export let Runner: EyesRunner;
 let eyes: Eyes;
-// end of Applitools
 
 // beforeAll for Applitools
+
 test.beforeAll(async() => {
 
     if (USE_ULTRAFAST_GRID) {
@@ -55,15 +56,15 @@ test.beforeAll(async() => {
 
 });
 
-
 test.beforeEach(async ({page}) => {
-    //Applitools
+
+    // Applitools
     eyes = new Eyes(Runner, Config);
     await eyes.open(
-      page,
-      'Playwright',
-      test.info().title,
-      { width: 1024, height: 768 }
+        page, 
+        'Playwright',
+        test.info().title,
+        {width: 1024, height: 768 }
     );
     //end of Applitools
 
@@ -71,15 +72,16 @@ test.beforeEach(async ({page}) => {
     homePage = new HomePage(page);
 });
 
+// Close the eyes
 test.afterEach(async () => {
     await eyes.close();
 });
 
 test.afterAll(async() => {
-  // forces Playwright to wait synchronously for all visual checkpoints to complete.
+// forces Playwright to wait synchronously for all visual checkpoints to complete.
   const results = await Runner.getAllTestResults();
   console.log('Visual test results', results);
-});
+})
 
 async function clickGetStarted(page: Page) {
     await homePage.clickGetStarted();
@@ -88,33 +90,60 @@ async function clickGetStarted(page: Page) {
 
 test.describe('Playwright website', () => {
 
-    test('has title', async () => {
+    test.only('has title', async () => {
         await homePage.assertPageTitle();
-        // https://applitools.com/docs/api-ref/sdk-api/playwright/js-intro/checksettings
         await eyes.check('Home page', Target.window().fully());
     });
     
-    test('get started link', async ({ page }) => {
+    test.only('Get Started link', async ({ page }) => {
+        // Act
         await clickGetStarted(page);
+        // Assert
         await topMenuPage.assertPageUrl(pageUrl);
-        // https://applitools.com/docs/api-ref/sdk-api/playwright/js-intro/checksettings#region-match-levels
-        // Layout: Check only the layout and ignore actual text and graphics.
-        await eyes.check('Get Started page', Target.window().fully().layout());
+        await topMenuPage.assertNpmVisible();
+        await eyes.check('Home page', Target.window().fully());
+        // Also add here the label is Node.js
     });
-    
-    test('check Java page', async ({ page }) => {
+
+    test.only('the page should update properly when "Python" is selected from the dropdown.', async ({ page }) => {
         await test.step('Act', async () => {
             await clickGetStarted(page);
             await topMenuPage.hoverNode();
-            await topMenuPage.clickJava();
-        });    
+            await topMenuPage.selectDropdownElement("Python")
+            await eyes.check('Python page', Target.window().fully().ignoreColors());
+        });
+      
         await test.step('Assert', async () => {
             await topMenuPage.assertPageUrl(pageUrl);
-            await topMenuPage.assertNodeDescriptionNotVisible();
-            await topMenuPage.assertJavaDescriptionVisible();
-            // https://applitools.com/docs/api-ref/sdk-api/playwright/js-intro/checksettings#region-match-levels
-            // Ignore colors: Similar to the strict match level but ignores changes in colors.
+            await topMenuPage.assertPyPIVisible();
+        });
+    });
+    
+    test.only('the page should update properly when "Java" is selected from the dropdown.', async ({ page }) => {
+        await test.step('Act', async () => {
+            await clickGetStarted(page);
+            await topMenuPage.hoverNode();
+            await topMenuPage.selectDropdownElement('Java');
             await eyes.check('Java page', Target.window().fully().ignoreColors());
+        });
+      
+        await test.step('Assert', async () => {
+            await topMenuPage.assertPageUrl(pageUrl);
+            await topMenuPage.assertAppJavaVisible()
+        });
+    });
+
+    test.only('the page should update properly when ".NET" is selected from the dropdown.', async ({ page }) => {
+        await test.step('Act', async () => {
+            await clickGetStarted(page);
+            await topMenuPage.hoverNode();
+            await topMenuPage.selectDropdownElement('.NET');
+            await eyes.check('.Net Page', Target.window().fully().ignoreColors());
+        });
+      
+        await test.step('Assert', async () => {
+            await topMenuPage.assertPageUrl(pageUrl);
+            await topMenuPage.assertMSTestVisible()
         });
     });
 });
